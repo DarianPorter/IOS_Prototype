@@ -8,6 +8,7 @@ public class Player : MonoBehaviour
     public GameObject partEfx;
     public GameObject cross;
     public GameObject fadder;
+    public Text scoreText;
     GameObject heartContainer;
     GameObject renderingCam;
 
@@ -46,7 +47,7 @@ public class Player : MonoBehaviour
         {
             PlayerDeath();
         }
-
+        scoreText.text = score.ToString();
         MoveWithPressure();
         Sparkle();
         AdjustColor();

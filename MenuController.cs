@@ -6,49 +6,46 @@ using UnityEngine.SceneManagement;
 
 public class MenuController : MonoBehaviour
 {
+    List<Color32> colors;
     public List<GameObject> buttons;
     public GameObject buttonPanel;
-    public GameObject buttonPanelButton;
     public GameObject fadder;
     public GameObject infoText;
+    public GameObject title;
+    public GameObject scoreText;
     GameObject fill;
-    RectTransform buttonPanelRect;
+    Vector2 startSize;
+    Color32 color;
     Color32 myGrey;
     Color32 slightlyTransparent;
     Color32 fadeTo;
-    float scrollTo;
     bool iTextActive;
-    bool rightPressed;
-    bool leftPressed;
     bool buttonPressed;
 
     void Start()
     {
-        for (int i = 0; i < buttonPanel.transform.GetChild(1).childCount; i++)
+        for (int i = 0; i < buttonPanel.transform.childCount; i++)
         {
-            GameObject button = buttonPanel.transform.GetChild(1).GetChild(i).GetChild(0).gameObject;
+            GameObject button = buttonPanel.transform.GetChild(i).GetChild(0).gameObject;
             buttons.Add(button);
+            startSize = button.GetComponent<RectTransform>().localScale;
         }
-        myGrey = new Color32(230, 230, 230, 255);
-        slightlyTransparent = new Color32(0, 0, 0, 125);
+        string highScore = PlayerPrefs.GetInt("highScore", 0).ToString();
+        title.GetComponent<Text>().text = ColorRichText("Title in Progress");
+        scoreText.gameObject.GetComponent<Text>().text = ColorRichText("Best Score: " + highScore);
+        myGrey = new Color32(220, 220, 220, 255);
+        slightlyTransparent = new Color32(0, 0, 0, 175);
         fadder.GetComponent<RectTransform>().sizeDelta = new Vector2(Screen.width, Screen.height);
         fadder.GetComponent<Image>().color = myGrey;
-        infoText.GetComponent<Text>().color = Color.clear;
-        scrollTo += ScrollVal();
-        buttonPanelRect = buttonPanel.GetComponent<RectTransform>();
+        colors = Init.colorPool;
+        color = colors[Random.Range(0, colors.Count)];
     }
     void LateUpdate()
     {
         Fade();
-        Scroll();
         FadeText();
         ResetFill();
         FillButton();
-    }
-    float ScrollVal()
-    {
-        float childWidth = buttonPanelButton.GetComponent<RectTransform>().sizeDelta.x;
-        return Screen.width - childWidth / 2;
     }
     void FadeText()
     {
@@ -56,33 +53,49 @@ public class MenuController : MonoBehaviour
         infoText.GetComponent<Text>().color =
             iTextActive ? Color.Lerp(textColor, Color.white, .2f) : Color.Lerp(textColor, Color.clear, .2f);
     }
-    void Scroll()
-    {
-        buttonPanelRect.anchoredPosition3D =
-            Vector3.Lerp
-            (buttonPanelRect.anchoredPosition3D,
-             new Vector3(scrollTo, buttonPanelRect.anchoredPosition3D.y, 0), .25f);
-    }
     void ResetFill()
     {
         for (int i = 0; i < buttons.Count; i++)
         {
+            GameObject fill = buttons[i].transform.parent.gameObject;
+            RectTransform rect = buttons[i].transform.parent.gameObject.GetComponent<RectTransform>();
             Image button = buttons[i].transform.parent.GetComponent<Image>();
+            Debug.Log(rect.gameObject.name);
+            fill.GetComponent<Image>().color = Color.Lerp(fill.GetComponent<Image>().color, Color.white, 0.2f);
             button.fillAmount = Mathf.Lerp(button.fillAmount, 0, 0.2f);
+            rect.localScale = Vector2.Lerp(rect.localScale, startSize, 0.2f);
+
         }
     }
     void FillButton()
     {
         if (buttonPressed == true)
         {
+            Debug.Log("hi");
             fill = EventSystem.current.currentSelectedGameObject.transform.parent.gameObject;
             Image fillImg = fill.GetComponent<Image>();
+            RectTransform rect = fill.GetComponent<RectTransform>();
+            fill.GetComponent<Image>().color = Color.Lerp(fill.GetComponent<Image>().color, color, 0.2f);
             fillImg.fillAmount = Mathf.Lerp(fillImg.fillAmount, TouchInput.NormilizedPressure(), 0.2f);
+            rect.localScale = Vector2.Lerp(rect.localScale, startSize * 1.12f, 0.2f);
             if (fillImg.fillAmount > .995f)
             {
                 SceneManager.LoadScene("SurvivalV1");
             }
         }
+    }
+    string ColorRichText(string sentence)
+    {
+        List<Color32> colors = Init.colorPool;
+        string modString = "";
+        for (int i = 0; i < sentence.Length; i++)
+        {
+            string htmlColor = ColorUtility.ToHtmlStringRGBA(colors[Random.Range(0, colors.Count)]);
+            string str = string.Format("<color=#{0}>{1}</color>", htmlColor, sentence[i]);
+            modString += str;
+        }
+        Debug.Log(modString);
+        return modString;
     }
     public void InformationTextActive()
     {
@@ -104,32 +117,6 @@ public class MenuController : MonoBehaviour
         Image fade = fadder.GetComponent<Image>();
         fade.color = Color.Lerp(fade.color, fadeTo, .1f);
     }
-    public void ScrollLeft()
-    {
-        if (leftPressed == false)
-        {
-            scrollTo -= ScrollVal();
-            leftPressed = true;
-        }
-        else
-        {
-            scrollTo += ScrollVal();
-            leftPressed = false;
-        }
-    }
-    public void ScrollRight()
-    {
-        if (rightPressed == false)
-        {
-            scrollTo -= ScrollVal();
-            rightPressed = true;
-        }
-        else
-        {
-            scrollTo += ScrollVal();
-            rightPressed = false;
-        }
-    }
     public void Pressed()
     {
         buttonPressed = true;
@@ -137,6 +124,7 @@ public class MenuController : MonoBehaviour
     }
     public void Realeased()
     {
+        color = colors[Random.Range(0, colors.Count)];
         buttonPressed = false;
         buttons.Add(EventSystem.current.currentSelectedGameObject);
     }

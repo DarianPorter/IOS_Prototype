@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class InfiniteController : MonoBehaviour
 {
-    public List<Color32> colorPool;
+    public List<Color32> colorPool = new List<Color32>();
     public GameObject ParentBlock;
     GameObject player;
 
@@ -24,6 +24,7 @@ public class InfiniteController : MonoBehaviour
         tillNextDiffInc = 15;
         blockAmmount = 2;
         spawnTimer = 2.8f;
+        colorPool = Init.colorPool;
     }
 
     void Update()

@@ -3,21 +3,11 @@ using UnityEngine;
 
 public class TouchInput : MonoBehaviour
 {
-    //InfiniteController gameController;
-
-    void Start()
+    public static Vector3 TouchInWorld()
     {
-        //gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<InfiniteController>();
-    }
-    string LeftOrRight()
-    {
-        string leftOrRight = "";
-        if (Input.touchCount > 0)
-        {
-            float touchLocation = Input.GetTouch(0).position.x;
-            leftOrRight = touchLocation > Screen.width / 2 ? "right" : "left";
-        }
-        return leftOrRight;
+        Vector3 touchPosInWorld = Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position);
+        Vector3 spawnPos = new Vector3(touchPosInWorld.x, touchPosInWorld.y, Camera.main.transform.position.z * -1);
+        return spawnPos;
     }
     public static float NormilizedPressure()
     {
