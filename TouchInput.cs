@@ -15,6 +15,9 @@ public class TouchInput : MonoBehaviour
     }
     public static float PressureToScreenPos()
     {
+        PlayerPrefs.SetFloat("totalPressureApplied",
+                             PlayerPrefs.GetFloat("totalPressureApplied") + NormilizedPressure());
+
         float xVal = Screen.width * NormilizedPressure();
         float xPos = Camera.main.ScreenToWorldPoint(new Vector3(xVal, 0, 0)).x;
         return xPos;

@@ -37,7 +37,7 @@ public class Player : MonoBehaviour
         if (playerDied)
         {
             if (fadder.GetComponent<Image>().color.a > .9)
-            { // temp restart
+            {
                 playerDied = false;
                 SceneManager.LoadScene("menu");
             }
@@ -58,6 +58,7 @@ public class Player : MonoBehaviour
     }
     void PlayerDeath()
     {
+        PlayerPrefs.SetFloat("totalGamesPlayed", PlayerPrefs.GetFloat("totalGamesPlayed") + 1);
         fadder.GetComponent<Effects>().destruction = true;
         playerDied = true;
         GetComponent<CircleCollider2D>().enabled = false;
@@ -106,6 +107,7 @@ public class Player : MonoBehaviour
         HeartContainer hearts = heartContainer.GetComponent<HeartContainer>();
         hearts.isHurt[hearts.playerLivesLeft - 1] = true;
 
+        PlayerPrefs.SetFloat("totalTimesHit", PlayerPrefs.GetFloat("totalTimesHit") + 1);
         Shake.WrongColor();
         blockHitPlayer.GetComponent<ChildBlock>().targetColor = Color.black;
         blockHitPlayer.transform.parent.GetComponent<ParentBlockController>().BreakAway();
@@ -114,14 +116,11 @@ public class Player : MonoBehaviour
     }
     void IncreaseScore(GameObject playerHitBlock)
     {
+        PlayerPrefs.SetFloat("totalGameScore", PlayerPrefs.GetFloat("totalGameStore") + 1);
         iOSHapticFeedback.Instance.Trigger((iOSHapticFeedback.iOSFeedbackType)1);
         AudioSource.PlayClipAtPoint(scoreUp, transform.position);
         playerHitBlock.GetComponent<ChildBlock>().targetColor = Color.white;
-        //playerHitBlock.transform.parent.GetComponent<ParentBlockController>().BreakAway();
-        //Color color = new Color(playerHitBlock.GetComponent<SpriteRenderer>().color.r,
-        //                        playerHitBlock.GetComponent<SpriteRenderer>().color.g,
-        //                        playerHitBlock.GetComponent<SpriteRenderer>().color.r, 0.9f);
-        //fadder.GetComponent<Image>().color = color;
+        playerHitBlock.transform.parent.GetComponent<ParentBlockController>().BreakAway();
         bbg.Increase();
         score++;
     }

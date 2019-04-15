@@ -60,7 +60,6 @@ public class MenuController : MonoBehaviour
             GameObject fill = buttons[i].transform.parent.gameObject;
             RectTransform rect = buttons[i].transform.parent.gameObject.GetComponent<RectTransform>();
             Image button = buttons[i].transform.parent.GetComponent<Image>();
-            Debug.Log(rect.gameObject.name);
             fill.GetComponent<Image>().color = Color.Lerp(fill.GetComponent<Image>().color, Color.white, 0.2f);
             button.fillAmount = Mathf.Lerp(button.fillAmount, 0, 0.2f);
             rect.localScale = Vector2.Lerp(rect.localScale, startSize, 0.2f);
@@ -71,7 +70,6 @@ public class MenuController : MonoBehaviour
     {
         if (buttonPressed == true)
         {
-            Debug.Log("hi");
             fill = EventSystem.current.currentSelectedGameObject.transform.parent.gameObject;
             Image fillImg = fill.GetComponent<Image>();
             RectTransform rect = fill.GetComponent<RectTransform>();
