@@ -51,10 +51,28 @@ public class Player : MonoBehaviour
         MoveWithPressure();
         Sparkle();
         AdjustColor();
+        //DebugTOuchInput();
     }
     bool ColorsMatch(Color32 colorA, Color32 colorB)
     {
         return colorA.r != colorB.r ? false : colorA.g != colorB.g ? false : colorA.b != colorB.b ? false : true;
+    }
+    void DebugTOuchInput()
+    {
+        if (Input.touchCount > 0)
+        {
+            for (int i = 0; i < Input.touchCount; i++)
+            {
+                if (!Input.touchPressureSupported)
+                {
+                    Debug.Log("force touch not Support");
+                }
+                else
+                {
+                    Debug.Log(Input.GetTouch(i).pressure);
+                }
+            }
+        }
     }
     void PlayerDeath()
     {

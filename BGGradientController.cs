@@ -19,7 +19,7 @@ public class BGGradientController : MonoBehaviour
     }
     void OnEnable()
     {
-        myGrey = new Color32(230, 230, 230, 255);
+        myGrey = new Color32(1, 1, 58, 255);
         targetColor = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>().targetColor;
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         gradientBackground = GetComponentInParent<MF.GradientBackground>();

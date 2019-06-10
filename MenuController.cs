@@ -10,13 +10,11 @@ public class MenuController : MonoBehaviour
     public List<GameObject> buttons;
     public GameObject buttonPanel;
     public GameObject fadder;
-    public GameObject infoText;
     public GameObject title;
     public GameObject scoreText;
     GameObject fill;
     Vector2 startSize;
     Color32 color;
-    Color32 myGrey;
     Color32 slightlyTransparent;
     Color32 fadeTo;
     bool iTextActive;
@@ -31,28 +29,21 @@ public class MenuController : MonoBehaviour
             startSize = button.GetComponent<RectTransform>().localScale;
         }
         string highScore = PlayerPrefs.GetInt("highScore", 0).ToString();
-        title.GetComponent<Text>().text = ColorRichText("Title in Progress");
+        title.GetComponent<Text>().text = ColorRichText("Force Tap");
         scoreText.gameObject.GetComponent<Text>().text = ColorRichText("Best Score: " + highScore);
-        myGrey = new Color32(220, 220, 220, 255);
         slightlyTransparent = new Color32(0, 0, 0, 175);
         fadder.GetComponent<RectTransform>().sizeDelta = new Vector2(Screen.width, Screen.height);
-        fadder.GetComponent<Image>().color = myGrey;
+        fadder.GetComponent<Image>().color = new Color32(4, 4, 83, 255);
         colors = Init.colorPool;
         color = colors[Random.Range(0, colors.Count)];
     }
     void LateUpdate()
     {
         Fade();
-        FadeText();
         ResetFill();
         FillButton();
     }
-    void FadeText()
-    {
-        Color textColor = infoText.GetComponent<Text>().color;
-        infoText.GetComponent<Text>().color =
-            iTextActive ? Color.Lerp(textColor, Color.white, .2f) : Color.Lerp(textColor, Color.clear, .2f);
-    }
+  
     void ResetFill()
     {
         for (int i = 0; i < buttons.Count; i++)
@@ -74,7 +65,7 @@ public class MenuController : MonoBehaviour
             Image fillImg = fill.GetComponent<Image>();
             RectTransform rect = fill.GetComponent<RectTransform>();
             fill.GetComponent<Image>().color = Color.Lerp(fill.GetComponent<Image>().color, color, 0.2f);
-            fillImg.fillAmount = Mathf.Lerp(fillImg.fillAmount, TouchInput.NormilizedPressure(), 0.2f);
+            fillImg.fillAmount = Mathf.Lerp(fillImg.fillAmount, TouchInput.NormilizedPressure(), 0.5f);
             rect.localScale = Vector2.Lerp(rect.localScale, startSize * 1.12f, 0.2f);
             if (fillImg.fillAmount > .995f)
             {
