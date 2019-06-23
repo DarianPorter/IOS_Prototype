@@ -24,7 +24,7 @@ public class InfiniteController : MonoBehaviour
         tillNextDiffInc = 15;
         blockAmmount = 2;
         spawnTimer = 2.8f;
-        colorPool = Init.colorPool;
+        //ResetColors();
     }
 
     void Update()
@@ -65,5 +65,17 @@ public class InfiniteController : MonoBehaviour
         decrSpawnTime += .02f;// .8 too fast 
         spawnTimer = 2.8f;
         increaseDiffTimer = 0;
+    }
+    public void ResetColors()
+    {
+        colorPool.Add(new Color32(255, 102, 102, 255));
+        colorPool.Add(new Color32(255, 172, 172, 255));
+        colorPool.Add(new Color32(255, 200, 0, 255));
+        colorPool.Add(new Color32(255, 160, 229, 255));
+        colorPool.Add(new Color32(255, 228, 129, 255));
+        colorPool.Add(new Color32(184, 196, 255, 255));
+        colorPool.Add(new Color32(205, 158, 255, 255));
+        colorPool.Add(new Color32(195, 255, 248, 255));
+        colorPool.Add(new Color32(219, 255, 194, 255));
     }
 }

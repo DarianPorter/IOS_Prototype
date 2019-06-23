@@ -10,7 +10,6 @@ public class Init : MonoBehaviour
 
     private void Awake()
     {
-        DontDestroyOnLoad(this);
         AddColors();
     }
     private void Update()
@@ -24,7 +23,7 @@ public class Init : MonoBehaviour
             }
         }
     }
-    void AddColors()
+    public void AddColors()
     {
         if(!init){
             colorPool.Add(new Color32(255, 102, 102, 255));

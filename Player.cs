@@ -80,6 +80,7 @@ public class Player : MonoBehaviour
         fadder.GetComponent<Effects>().destruction = true;
         playerDied = true;
         GetComponent<CircleCollider2D>().enabled = false;
+
     }
     void AdjustColor()
     {

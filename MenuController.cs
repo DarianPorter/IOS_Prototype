@@ -40,36 +40,44 @@ public class MenuController : MonoBehaviour
     void LateUpdate()
     {
         Fade();
-        ResetFill();
-        FillButton();
+        if (Input.touchCount == 0)
+        {
+            ResetFill();
+        }
+        if(Input.touchCount > 0){
+            FillButton();
+        }
     }
   
     void ResetFill()
     {
         for (int i = 0; i < buttons.Count; i++)
         {
-            GameObject fill = buttons[i].transform.parent.gameObject;
-            RectTransform rect = buttons[i].transform.parent.gameObject.GetComponent<RectTransform>();
-            Image button = buttons[i].transform.parent.GetComponent<Image>();
-            fill.GetComponent<Image>().color = Color.Lerp(fill.GetComponent<Image>().color, Color.white, 0.2f);
-            button.fillAmount = Mathf.Lerp(button.fillAmount, 0, 0.2f);
-            rect.localScale = Vector2.Lerp(rect.localScale, startSize, 0.2f);
-
+            if(buttons[i] != null){
+                GameObject fill = buttons[i].transform.parent.gameObject;
+                RectTransform rect = buttons[i].transform.parent.gameObject.GetComponent<RectTransform>();
+                Image button = buttons[i].transform.parent.GetComponent<Image>();
+                fill.GetComponent<Image>().color = Color.Lerp(fill.GetComponent<Image>().color, Color.white, 0.2f);
+                button.fillAmount = Mathf.Lerp(button.fillAmount, 0, 0.2f);
+                rect.localScale = Vector2.Lerp(rect.localScale, startSize, 0.2f);
+            }
         }
     }
     void FillButton()
     {
         if (buttonPressed == true)
         {
-            fill = EventSystem.current.currentSelectedGameObject.transform.parent.gameObject;
-            Image fillImg = fill.GetComponent<Image>();
-            RectTransform rect = fill.GetComponent<RectTransform>();
-            fill.GetComponent<Image>().color = Color.Lerp(fill.GetComponent<Image>().color, color, 0.2f);
-            fillImg.fillAmount = Mathf.Lerp(fillImg.fillAmount, TouchInput.NormilizedPressure(), 0.5f);
-            rect.localScale = Vector2.Lerp(rect.localScale, startSize * 1.12f, 0.2f);
-            if (fillImg.fillAmount > .995f)
-            {
-                SceneManager.LoadScene("SurvivalV1");
+            if(EventSystem.current.currentSelectedGameObject != null){
+                fill = EventSystem.current.currentSelectedGameObject.transform.parent.gameObject;
+                Image fillImg = fill.GetComponent<Image>();
+                RectTransform rect = fill.GetComponent<RectTransform>();
+                fill.GetComponent<Image>().color = Color.Lerp(fill.GetComponent<Image>().color, color, 0.2f);
+                fillImg.fillAmount = Mathf.Lerp(fillImg.fillAmount, TouchInput.NormilizedPressure(), 0.5f);
+                rect.localScale = Vector2.Lerp(rect.localScale, startSize * 1.12f, 0.2f);
+                if (fillImg.fillAmount > .995f)
+                {
+                    SceneManager.LoadScene("SurvivalV1");
+                }
             }
         }
     }
@@ -86,21 +94,6 @@ public class MenuController : MonoBehaviour
         Debug.Log(modString);
         return modString;
     }
-    public void InformationTextActive()
-    {
-        if (iTextActive == false)
-        {
-            fadeTo = slightlyTransparent;
-            iTextActive = true;
-            fadder.GetComponent<Image>().raycastTarget = true;
-        }
-        else
-        {
-            fadeTo = Color.clear;
-            iTextActive = false;
-            fadder.GetComponent<Image>().raycastTarget = false;
-        }
-    }
     public void Fade()
     {
         Image fade = fadder.GetComponent<Image>();
@@ -116,5 +109,15 @@ public class MenuController : MonoBehaviour
         color = colors[Random.Range(0, colors.Count)];
         buttonPressed = false;
         buttons.Add(EventSystem.current.currentSelectedGameObject);
+    }
+    public void OpenInstagram(){
+        Application.OpenURL("https://www.instagram.com/darian_porter_/");
+    }
+    public void OpenGithub(){
+        Application.OpenURL("https://github.com/DarianPorter?tab=repositories");
+    }
+    public void OpenLinkedIn()
+    {
+        Application.OpenURL("https://www.linkedin.com/in/darian-baptiste-09a8aa189/");
     }
 }
