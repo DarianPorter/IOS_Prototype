@@ -72,7 +72,7 @@ public class MenuController : MonoBehaviour
                 Image fillImg = fill.GetComponent<Image>();
                 RectTransform rect = fill.GetComponent<RectTransform>();
                 fill.GetComponent<Image>().color = Color.Lerp(fill.GetComponent<Image>().color, color, 0.2f);
-                fillImg.fillAmount = Mathf.Lerp(fillImg.fillAmount, TouchInput.NormilizedPressure(), 0.5f);
+                fillImg.fillAmount = Mathf.Lerp(fillImg.fillAmount, TouchInput.NormilizedPressure(), 0.75f);
                 rect.localScale = Vector2.Lerp(rect.localScale, startSize * 1.12f, 0.2f);
                 if (fillImg.fillAmount > .995f)
                 {
@@ -81,7 +81,7 @@ public class MenuController : MonoBehaviour
             }
         }
     }
-    string ColorRichText(string sentence)
+    public string ColorRichText(string sentence)
     {
         List<Color32> colors = Init.colorPool;
         string modString = "";
