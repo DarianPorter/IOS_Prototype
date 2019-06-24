@@ -91,7 +91,6 @@ public class MenuController : MonoBehaviour
             string str = string.Format("<color=#{0}>{1}</color>", htmlColor, sentence[i]);
             modString += str;
         }
-        Debug.Log(modString);
         return modString;
     }
     public void Fade()
@@ -116,8 +115,7 @@ public class MenuController : MonoBehaviour
     public void OpenGithub(){
         Application.OpenURL("https://github.com/DarianPorter?tab=repositories");
     }
-    public void OpenLinkedIn()
-    {
+    public void OpenLinkedIn(){
         Application.OpenURL("https://www.linkedin.com/in/darian-baptiste-09a8aa189/");
     }
 }

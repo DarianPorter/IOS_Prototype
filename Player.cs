@@ -98,6 +98,7 @@ public class Player : MonoBehaviour
         ParticleSystem.MainModule childPS = particleSys.GetComponent<ParticleSystem>().main;
         Color childPScolor = childPS.startColor.color;
 
+        transform.Rotate(0, 0, 2f);
         childPScolor = Color.Lerp(childPScolor, possibleColors[Random.Range(0, possibleColors.Count)], 0.15f);
     }
     void MoveWithPressure()
