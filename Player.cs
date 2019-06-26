@@ -27,6 +27,7 @@ public class Player : MonoBehaviour
 
     public static bool playerDied;
     bool supported;
+    bool pressureSuported;
 
     private void Start()
     {
@@ -51,28 +52,10 @@ public class Player : MonoBehaviour
         MoveWithPressure();
         Sparkle();
         AdjustColor();
-        //DebugTOuchInput();
     }
     bool ColorsMatch(Color32 colorA, Color32 colorB)
     {
         return colorA.r != colorB.r ? false : colorA.g != colorB.g ? false : colorA.b != colorB.b ? false : true;
-    }
-    void DebugTOuchInput()
-    {
-        if (Input.touchCount > 0)
-        {
-            for (int i = 0; i < Input.touchCount; i++)
-            {
-                if (!Input.touchPressureSupported)
-                {
-                    Debug.Log("force touch not Support");
-                }
-                else
-                {
-                    Debug.Log(Input.GetTouch(i).pressure);
-                }
-            }
-        }
     }
     void PlayerDeath()
     {
@@ -98,13 +81,20 @@ public class Player : MonoBehaviour
         ParticleSystem.MainModule childPS = particleSys.GetComponent<ParticleSystem>().main;
         Color childPScolor = childPS.startColor.color;
 
-        transform.Rotate(0, 0, 2f);
+        transform.Rotate(0, 0, 3f);
         childPScolor = Color.Lerp(childPScolor, possibleColors[Random.Range(0, possibleColors.Count)], 0.15f);
     }
     void MoveWithPressure()
     {
-        Vector3 targetPos = new Vector3(TouchInput.PressureToScreenPos(), transform.position.y, transform.position.z);
-        transform.position = Vector3.Lerp(transform.position, targetPos, .2f);
+        if (pressureSuported)
+        {
+            Vector3 targetPos = new Vector3(TouchInput.PressureToScreenPos(), transform.position.y, transform.position.z);
+            transform.position = Vector3.Lerp(transform.position, targetPos, .25f);
+        }else{
+            Vector2 bounds = GetBounds();
+            Vector3 targetPos = new Vector3(TouchInput.Held(bounds.x, bounds.y, transform.position.x, 0.55f), transform.position.y, transform.position.z);
+            transform.position = Vector3.Lerp(transform.position, targetPos, .25f);
+        }
     }
     void SpawnPart(Color32 color, Vector3 position)
     {
@@ -147,10 +137,7 @@ public class Player : MonoBehaviour
     void Init()
     {
         supported = iOSHapticFeedback.Instance.IsSupported();
-        if (supported)
-        {
-            Debug.Log("Your device does not support iOS haptic feedback");
-        }
+        pressureSuported = Input.touchPressureSupported;
         renderingCam = Camera.main.transform.parent.GetChild(1).gameObject;
         bbg = renderingCam.GetComponent<BGGradientController>();
         gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<InfiniteController>();
@@ -172,6 +159,25 @@ public class Player : MonoBehaviour
         int randomColor = Random.Range(0, gameController.colorPool.Count - 1);
         possibleColors.Add(gameController.colorPool[randomColor]);
         gameController.colorPool.Remove(gameController.colorPool[randomColor]);
+    }
+    private Vector2 CalculateScreenSizeInWorldCoords(){
+        var cam = Camera.main;
+        var p1 = cam.ViewportToWorldPoint(new Vector3(0, 0, cam.nearClipPlane));
+        var p2 = cam.ViewportToWorldPoint(new Vector3(1, 0, cam.nearClipPlane));
+        var p3 = cam.ViewportToWorldPoint(new Vector3(1, 1, cam.nearClipPlane));
+
+        float width = (p2 - p1).magnitude;
+        float height = (p3 - p2).magnitude;
+
+        Vector2 dimensions = new Vector2(width, height);
+
+        return dimensions;
+    }
+
+    private Vector2 GetBounds(){
+        Vector3 bounds = Camera.main.ScreenToWorldPoint(new Vector3(0,Screen.width,1000));
+        Vector2 dimensions = CalculateScreenSizeInWorldCoords();
+        return new Vector2(bounds.x , bounds.x + dimensions.x);
     }
     private void OnCollisionExit2D(Collision2D collision)
     {

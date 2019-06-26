@@ -22,6 +22,7 @@ public class MenuController : MonoBehaviour
 
     void Start()
     {
+
         for (int i = 0; i < buttonPanel.transform.childCount; i++)
         {
             GameObject button = buttonPanel.transform.GetChild(i).GetChild(0).gameObject;
@@ -29,13 +30,18 @@ public class MenuController : MonoBehaviour
             startSize = button.GetComponent<RectTransform>().localScale;
         }
         string highScore = PlayerPrefs.GetInt("highScore", 0).ToString();
-        title.GetComponent<Text>().text = ColorRichText("Force Tap");
+        title.GetComponent<Text>().text = ColorRichText("Force Tap X");
         scoreText.gameObject.GetComponent<Text>().text = ColorRichText("Best Score: " + highScore);
         slightlyTransparent = new Color32(0, 0, 0, 175);
         fadder.GetComponent<RectTransform>().sizeDelta = new Vector2(Screen.width, Screen.height);
         fadder.GetComponent<Image>().color = new Color32(4, 4, 83, 255);
         colors = Init.colorPool;
         color = colors[Random.Range(0, colors.Count)];
+        if(Screen.height > 1334){
+            buttonPanel.GetComponent<RectTransform>().localScale = new Vector3(3.5f, 3.5f, 0);
+        }else if (Screen.height > 1334){
+            buttonPanel.GetComponent<RectTransform>().localScale = new Vector3(1.5f, 1.5f, 0);
+        }
     }
     void LateUpdate()
     {
@@ -72,7 +78,11 @@ public class MenuController : MonoBehaviour
                 Image fillImg = fill.GetComponent<Image>();
                 RectTransform rect = fill.GetComponent<RectTransform>();
                 fill.GetComponent<Image>().color = Color.Lerp(fill.GetComponent<Image>().color, color, 0.2f);
-                fillImg.fillAmount = Mathf.Lerp(fillImg.fillAmount, TouchInput.NormilizedPressure(), 0.75f);
+                if(Input.touchPressureSupported){
+                    fillImg.fillAmount = Mathf.Lerp(fillImg.fillAmount, TouchInput.NormilizedPressure(), 0.75f);
+                }else{
+                    fillImg.fillAmount = Mathf.Lerp(fillImg.fillAmount, TouchInput.Held(0,1, fillImg.fillAmount, 0.06f), 0.75f);
+                }
                 rect.localScale = Vector2.Lerp(rect.localScale, startSize * 1.12f, 0.2f);
                 if (fillImg.fillAmount > .995f)
                 {

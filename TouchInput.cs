@@ -22,4 +22,17 @@ public class TouchInput : MonoBehaviour
         float xPos = Camera.main.ScreenToWorldPoint(new Vector3(xVal, 0, 0)).x;
         return xPos;
     }
+    public static float Held(float minBounds, float maxBounds, float currentVal, float addVal){
+        if(Input.touchCount > 0){
+            if(currentVal < maxBounds){
+                return currentVal + addVal;
+            }
+        }else{
+            if (currentVal > minBounds)
+            {
+                return currentVal - addVal;
+            }
+        }
+        return currentVal;
+    }
 }

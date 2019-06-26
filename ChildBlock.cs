@@ -25,7 +25,7 @@ public class ChildBlock : MonoBehaviour
         gameObject.GetComponent<BoxCollider2D>().size = new Vector2(1, 1);
         GetComponent<SpriteRenderer>().color = Color.Lerp(GetComponent<SpriteRenderer>().color, targetColor, .25f);
         Vector3 newPos = new Vector3(targetPos.x, transform.parent.position.y, transform.position.z);
-        transform.position = Vector3.Lerp(transform.position, newPos, 0.175f);
+        transform.position = Vector3.Lerp(transform.position, newPos, 0.25f);
     }
     public void SetColor()
     {

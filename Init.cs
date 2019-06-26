@@ -18,7 +18,8 @@ public class Init : MonoBehaviour
         {
             if (Input.GetTouch(0).phase == TouchPhase.Ended)
             {
-                Instantiate(sparkle, TouchInput.TouchInWorld(), Quaternion.identity);
+                GameObject spark = Instantiate(sparkle, TouchInput.TouchInWorld(), Quaternion.identity) as GameObject;
+                Destroy(spark,2);
                 iOSHapticFeedback.Instance.Trigger((iOSHapticFeedback.iOSFeedbackType)2);
             }
         }

@@ -26,14 +26,19 @@ public class Intro : MonoBehaviour
         if (beenPrompted == 0){
             gameCanvas.SetActive(false);
             prompts.Add("Welcome!");
-            prompts.Add("My name is Darian Porter");
-            prompts.Add("You are about to play a game I made");
-            prompts.Add("I apreciate you downloading it");
-            prompts.Add("This Game is all about force you apply to your screen");
-            prompts.Add("Taking that into consideration, please dont press hard enough to break your screen.... that will be a you problem");
-            prompts.Add("the game is small and a prof of concept so I will be going back and adding more later");
-            prompts.Add("if you have any recomendations please feel free to contact me :)");
-            prompts.Add("Instagaram, GitHub, and Email all linked on the next page");
+            prompts.Add("My name is Darian Porter.");
+            prompts.Add("You are about to play a game I made.");
+            if (Input.touchPressureSupported){
+                prompts.Add("This Game is all about force you apply to your screen.");
+                prompts.Add("The force required for playing is not substantial so dont worry you wont break your screen.");
+            }else{
+                prompts.Add("Apparently your device does not support Apple's Force Touch,");
+                prompts.Add("That's okay, ive created an alternative playing scheme where you can hold the screen.");
+                prompts.Add("Take into consideration that this is not the intended way I wanted you to play.");
+            }
+            prompts.Add("The game is small and a proof of concept so I will be going back and adding more later.");
+            prompts.Add("If you have any recommendations of feedback please feel free to contact me :).");
+            prompts.Add("Instagaram, GitHub, and Linkedin are all linked on the next page.");
             fadder = transform.GetChild(0).gameObject;
             fadder.GetComponent<RectTransform>().sizeDelta = new Vector2(Screen.width, Screen.height);
             for (int i = 0; i < prompts.Count; i ++){
